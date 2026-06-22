@@ -3,6 +3,7 @@ import { createStatsBar, updateStats } from './StatsBar.js';
 import {
   createTypingArea,
   renderText,
+  scrollToCurrentChar,
   getTypingInput,
   focusTypingInput,
   clearTypingInput,
@@ -169,6 +170,11 @@ export class App {
 
     this.inputText = newValue;
     renderText(this.currentArticle.content, this.inputText);
+    scrollToCurrentChar();
+
+    if (this.inputText.length >= this.currentArticle.content.length) {
+      this.finishTest();
+    }
   }
 
   finishTest() {
@@ -176,10 +182,11 @@ export class App {
     this.timer.stop();
     disableTypingInput();
 
+    const elapsed = this.timer.getElapsed();
     const stats = calculateStats(
       this.currentArticle.content,
       this.inputText,
-      TEST_DURATION
+      elapsed > 0 ? elapsed : TEST_DURATION
     );
     this.lastStats = stats;
     showResultModal(stats);

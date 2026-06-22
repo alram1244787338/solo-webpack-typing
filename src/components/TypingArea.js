@@ -82,3 +82,22 @@ export function enableTypingInput() {
   const input = getTypingInput();
   if (input) input.disabled = false;
 }
+
+export function scrollToCurrentChar() {
+  const currentChar = document.querySelector('.char-current');
+  if (!currentChar) return;
+
+  const display = document.getElementById('text-display');
+  if (!display) return;
+
+  const displayRect = display.getBoundingClientRect();
+  const charRect = currentChar.getBoundingClientRect();
+
+  const charTop = charRect.top - displayRect.top + display.scrollTop;
+  const targetScrollTop = charTop - display.clientHeight / 2 + charRect.height / 2;
+
+  display.scrollTo({
+    top: targetScrollTop,
+    behavior: 'smooth'
+  });
+}
